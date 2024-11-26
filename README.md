@@ -108,7 +108,7 @@ The repository includes two functions:
   ```
    (1) the true response rates (peff);  
    (2) the average number of responders and average sample size (pts);  
-   (3) the (lambda, gamma, c1, c2) used in this trial (parameter);  
+   (3) the (m1, n, lambda, gamma, c1, c2) used in this trial (parameter);  
    (4) the overall power: the probability of regarding both doses as futile at the final analysis (overallpower)
   ```
 
@@ -117,7 +117,7 @@ The repository includes two functions:
   ```
    (1) the true response rates (peff);  
    (2) the average number of responders and average sample size (pts);  
-   (3) the (lambda, gamma, c1, c2) used in this trial (parameter);  
+   (3) the (m1, n, lambda, gamma, c1, c2) used in this trial (parameter);  
    (4) the selection rate of each dose, the probability of having inconclusive results, the probability of making incorrect decisions, the weighted loss, the average sample size for each dose, the probability of making go decision at the final analysis, and the probability of not having an effective dose at the final analysis (present);
    (5) the average bias across doses (bias);
    (6) the average mean square error (MSE) across doses (MSE)
