@@ -122,8 +122,7 @@ todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
   }
   
   result.list <- list(peff=peff, pts=round(pts,2), parameter=parameter,
-                      futile=round(futile,2), present=present,
-                      bias = bias, mse = mse)
+                      present=present, bias = bias, mse = mse)
   
   return(result.list)
 }

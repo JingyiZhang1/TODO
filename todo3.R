@@ -174,7 +174,7 @@ todo3 <- function(ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3,
     mse[id] <- mean((fa.mean[,id] - peff[id])^2)
   }
   
-  result.list <- list(peff = peff, parameter = parameter, futile = round(futile,2), 
+  result.list <- list(peff = peff, parameter = parameter,
                       present = present, bias = bias, mse = mse)
   return(result.list)
 }
