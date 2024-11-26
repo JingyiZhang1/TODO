@@ -139,5 +139,5 @@ print(paste('optimal (m1, n, gamma, lambda) = (',
             m1_opt, ', ', n_opt, ', ', gamma_opt, ', ', lambda_opt,')', sep =''))
 
 
-save.image("TODO2-n-m1-a1-a2-optimization.RData")
+save.image("TODO2-n-m1-lambda-gamma-optimization.RData")
 

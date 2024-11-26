@@ -1,5 +1,5 @@
 # using the functions: todo2_data_generation(), todo2_futility(), todo2()
-load('E:/projects/20221213-project-TODO/review/20241119/code/TODO2-n-m1-a1-a2-optimization.RData')
+load('E:/projects/20221213-project-TODO/review/20241119/code/TODO2-n-m1-lambda-gamma-optimization.RData')
 source('E:/projects/20221213-project-TODO/review/20241119/code/todo2.R')
 
 ## simulation scenarios

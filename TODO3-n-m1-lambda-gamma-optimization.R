@@ -133,4 +133,4 @@ a2_opt <- lambda_opt
 print(paste('optimal (m1, n, gamma, lambda, a1, a2) = (', 
             m1_opt, ', ', n_opt, ', ', gamma_opt, ', ', lambda_opt, ')', sep =''))
 
-save.image("TODO3-n-m1-a1-a2-optimization.RData")
+save.image("TODO3-n-m1-lambda-gamma-optimization.RData")
