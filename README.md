@@ -13,48 +13,48 @@ The repository includes two functions:
 - todo2_data_generation.R: The R code that includes the function ```todo2_data_generation()``` to obtain the simulated data and model fitting results of the TODO design with 2 doses.
   
   ```rscript
-  todo2_data_generation (rseed, iscena, ntrial, n1, nsample, peff.m, theta0, delta1, sigma1, tau)
+  todo2_data_generation (rseed, iscena, ntrial, m1, nsample, peff.m, theta0, delta1, sigma1, tau)
   ```
 
 - todo2_futility.R: The R code that includes the function ```todo2_futility()``` to obtain the futility monitoring results of the TODO design with 2 doses.
   
   ```rscript
-  todo2_futility (ia12, fdata, ia.post, fa.post1, fa.post2, fa.post3, post, ntrial, peff, theta0)
+  todo2_futility (ia12, fdata, ia.post, fa.post1, fa.post2, fa.post3, post, ntrial, peff, theta0, m1, nsample)
   ```
 
 - todo2.R: The R code that includes the function ```todo2()``` to obtain the operating characteristics of the proposed design by simulating trials.
   
   ```rscipt
-  todo2 (ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post, ia.mean, fa.mean1, fa.mean2, fa.mean3, ntrial, peff, theta0, delta1, ia12, idr.m, wl)
+  todo2 (ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post, ia.mean, fa.mean1, fa.mean2, fa.mean3, ntrial, peff, theta0, delta1, ia12, idr.m, wl, m1, nsample)
   ```
 
-- TODO2-parameter-optimizaiton.R: The R code for parameter optimization.
+- TODO2-m1-n-lambda-gamma-optimizaiton.R: The R code for optimizing parameters (m1, n, lambda, gamma).
 
-- TODO2-ia-timing-optimization.R: The R code for optimizing the timing of interim analysis.
+- TODO2-c1-c2-optimization.R: The R code for optimizing parameters (c1, c2).
 
 - TODO2-simulation.R: The R code for obtaining the operating characteristics of the proposed design by simulating trials.
 
 - todo3_data_generation.R: The R code that includes the function ```todo3_data_generation()``` to obtain the simulated data and model fitting results of the TODO design with 3 doses.
   
   ```rscript
-  todo3_data_generation (rseed, iscena, ntrial, n1, nsample, peff.m, theta0, delta1,sigma1,tau)
+  todo3_data_generation (rseed, iscena, ntrial, m1, nsample, peff.m, theta0, delta1,sigma1,tau)
   ```
 
 - todo3_futility.R: The R code that includes the function ```todo3_futility()``` to obtain the futility monitoring results of the TODO design with 3 doses.
   
   ```rscript
-  todo3_futility (ia12, fdata, ia.post, fa.post1, fa.post2, fa.post3, post1, post2, ntrial, peff, theta0)
+  todo3_futility (ia12, fdata, ia.post, fa.post1, fa.post2, fa.post3, post1, post2, ntrial, peff, theta0, m1, nsample)
   ```
 
 - todo3.R: The R code that includes the function ```todo3()``` to obtain the operating characteristics of the proposed design by simulating trials.
   
   ```rscipt
-  todo3 (ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3, ia.mean, fa.mean1, fa.mean2, fa.mean3, post1, post2, ntrial, peff, theta0, delta1, ia12, idr.m, wl)
+  todo3 (ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3, ia.mean, fa.mean1, fa.mean2, fa.mean3, post1, post2, ntrial, peff, theta0, delta1, ia12, idr.m, wl, m1, nsample)
   ```
 
-- TODO3-parameter-optimizaiton.R: The R code for parameter optimization.
+- TODO3-m1-n-lambda-gamma-optimizaiton.R: The R code for optimizing parameters (m1, n, lambda, gamma).
 
-- TODO3-ia-timing-optimization.R: The R code for optimizing the timing of interim analysis.
+- TODO3-c1-c2-optimization.R: The R code for optimizing parameters (c1, c2).
 
 - TODO3-simulation.R: The R code for obtaining the operating characteristics of the proposed design by simulating trials.  
 
@@ -78,7 +78,7 @@ The repository includes two functions:
 
 - `sigma1`,`tau`: The hyperparameters for the proposed model.
 
-- `ia12`: The indicator of the optimal combination of parameters (a1, a2).
+- `ia12`: The indicator of the optimal combination of parameters (lambda, gamma).
 
 - `ic12`: The indicator of the optimal combination of parameters (c1, c2).
 
@@ -108,8 +108,8 @@ The repository includes two functions:
   ```
    (1) the true response rates (peff);  
    (2) the average number of responders and average sample size (pts);  
-   (3) the (a1, a2) used in this trial (parameter);  
-   (4) the global power: the probability of regarding both doses as futile at the final analysis (gpower)
+   (3) the (lambda, gamma, c1, c2) used in this trial (parameter);  
+   (4) the overall power: the probability of regarding both doses as futile at the final analysis (overallpower)
   ```
 
 - `todo2()` and `todo3()` will return the simulated data, model-fitting results and decision-making of the TODO design for two-dose and three-dose trials, including:
@@ -117,7 +117,7 @@ The repository includes two functions:
   ```
    (1) the true response rates (peff);  
    (2) the average number of responders and average sample size (pts);  
-   (3) the (a1, a2) used in this trial (parameter);  
+   (3) the (lambda, gamma, c1, c2) used in this trial (parameter);  
    (4) the selection rate of each dose, the probability of having inconclusive results, the probability of making incorrect decisions, the weighted loss, the average sample size for each dose, the probability of making go decision at the final analysis, and the probability of not having an effective dose at the final analysis (present);
    (5) the average bias across doses (bias);
    (6) the average mean square error (MSE) across doses (MSE)
