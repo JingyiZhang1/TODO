@@ -106,13 +106,13 @@ todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
   IDR <- sum(present0*idr.m)
   weighted_loss <- sum(SIR)*wl+IDR
   if(sum(peff<=theta0)==length(peff)){weighted_loss <- IDR}
-  present <- c(sel*100,sum(SIR),IDR,weighted_loss,pts[,6],none)
+  present <- c(sel*100,sum(SIR),IDR,weighted_loss,pts[,6], 100-futile[2,1], 100-futile[2,2], none)
   present <- t(as.matrix(present))
-  colnames(present) <- c('arm1','arm2','SIR','IDR','weighted_loss','ASS1','ASS2','none')
+  colnames(present) <- c('arm1','arm2','SIR','IDR','weighted_loss','ASS1','ASS2', 'go1', 'go2','none')
   
-  parameter <- c(a1,a2,c1,c2)
+  parameter <- c(m1, nsample, a12[ia12,1], a12[ia12,2], c1, c2)
   parameter <- t(as.matrix(parameter))
-  colnames(parameter) <- c('a1','a2','c1','c2')
+  colnames(parameter) <- c('m1', 'n', 'lambda', 'gamma', 'c1', 'c2')
   
   ## bias and MSE
   bias <- mse <- rep(0, length(peff))

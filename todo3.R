@@ -148,7 +148,7 @@ todo3 <- function(ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3,
   overallpower <- 0
   for(trial in 1:ntrial){
     if( sum(FUTILE[2,,trial]==(peff<=theta0))==length(peff) ){overallpower <- overallpower + 100/ntrial}
-  }    
+  }
   
   inc.d2 <- (sum(inconclusive[,1]==0 & inconclusive[,2]==-1)+sum(inconclusive[,1]==-2 & inconclusive[,2]==-1))*100/ntrial
   inc.d1d2 <- sum(inconclusive[,1]==-1 & inconclusive[,2]==-1)*100/ntrial
@@ -159,13 +159,13 @@ todo3 <- function(ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3,
   DIDR <- sum(present0*idr.m)
   weighted_loss <- sum(inc)*wl+DIDR
   if(sum(peff<=theta0)==length(peff)){weighted_loss <- DIDR}
-  present <- c(sel[1:length(peff)]*100, sum(inc), DIDR, weighted_loss, pts[,6], none)
+  present <- c(sel[1:length(peff)]*100, sum(inc), DIDR, weighted_loss, pts[,6], 100-futile[2,1], 100-futile[2,2], 100-futile[2,3], none)
   present <- t(as.matrix(present))
-  colnames(present) <- c('sel1','sel2','sel3','SIR','IDR','WL','ASS1','ASS2','ASS3','none')
+  colnames(present) <- c('sel1','sel2','sel3','SIR','IDR','WL','ASS1','ASS2','ASS3','go1','go2','go3','none')
   
-  parameter <- c(a1,a2,c1,c2)
+  parameter <- c(m1, nsample, a12[ia12,1], a12[ia12,2], c1, c2)
   parameter <- t(as.matrix(parameter))
-  colnames(parameter) <- c('a1','a2','c1','c2')
+  colnames(parameter) <- c('m1', 'n', 'lambda', 'gamma', 'c1', 'c2')
   
   ## bias and MSE
   bias <- mse <- rep(0, length(peff))

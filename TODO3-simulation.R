@@ -68,11 +68,7 @@ for(iscena in 1:sim.nscenarios){
                         fa.mean3 = todo3_data[[iscena]]$fa.mean3, 
                         ntrial, peff = peff.m[iscena,], theta0, delta1, ia12 = a12_opt, idr.m = idr.m[iscena,], wl, m1, nsample)
   
-  main_result <- rbind(main_result, c(re[[iscena]]$present[1:9], 
-                                      go1 = 100-re[[iscena]]$futile[2,1],
-                                      go2 = 100-re[[iscena]]$futile[2,2], 
-                                      go2 = 100-re[[iscena]]$futile[2,3], 
-                                      re[[iscena]]$present[10]))
+  main_result <- rbind(main_result, re[[iscena]]$present)
   
   bias_mse <- rbind(bias_mse, c(bias = mean(re[[iscena]]$bias), mse = mean(re[[iscena]]$mse)))
 }
