@@ -2,7 +2,7 @@
 # futility monitoring and dose comparison for interim and final analysis
 todo3 <- function(ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3, 
                   ia.mean, fa.mean1, fa.mean2, fa.mean3, post1, post2,
-                  ntrial, peff, theta0, delta1, ia12, idr.m, wl){
+                  ntrial, peff, theta0, delta1, ia12, idr.m, wl, m1, nsample){
   
   library(rjags)
   
@@ -12,12 +12,12 @@ todo3 <- function(ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3,
   inconclusive <- matrix(1,ncol=length(peff),nrow=ntrial)
   
   ## all posible cutoff combinations for futility monitoring
-  a1 <- a2 <- 0
+  gamma1 <- log(seq(1,0.5, by = -0.025))/log(0.5)
+  lambda1 <- seq(0.5,1, by = 0.0025)
   a12 <- NULL
-  for(ia1 in 1:98){
-    for(ia2 in max(51,ia1):99){a12 <- rbind(a12,c(ia1,ia2)/100)}
-  }
-  a1 <- a12[ia12,1];a2 <- a12[ia12,2]
+  for(ia1 in 1:length(lambda1)){ for(ia2 in 1:length(gamma1)){a12 <- rbind(a12,c(lambda1[ia1],gamma1[ia2]))} }
+  a1 <- a12[ia12,1]*(m1/nsample)^a12[ia12,2]
+  a2 <- a12[ia12,1]
   
   ## all posible cutoff combinations for non-inferior comparison
   c12 <- NULL
@@ -145,9 +145,9 @@ todo3 <- function(ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3,
   sel <- c(colMeans(SEL),1-sum(colMeans(SEL)))
   
   none <- sum(colSums(FUTILE[2,,])==3)*100/ntrial
-  gpower <- 0
+  overallpower <- 0
   for(trial in 1:ntrial){
-    if( sum(FUTILE[2,,trial]==(peff<=theta0))==length(peff) ){gpower <- gpower + 100/ntrial}
+    if( sum(FUTILE[2,,trial]==(peff<=theta0))==length(peff) ){overallpower <- overallpower + 100/ntrial}
   }    
   
   inc.d2 <- (sum(inconclusive[,1]==0 & inconclusive[,2]==-1)+sum(inconclusive[,1]==-2 & inconclusive[,2]==-1))*100/ntrial

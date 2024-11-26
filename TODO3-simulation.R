@@ -1,4 +1,5 @@
-setwd('~/ZJY/rce')
+
+load('E:/projects/20221213-project-TODO/review/20241119/code/TODO3-c1-c2-optimization.RData')
 
 ## simulation scenarios
 peff.m <- rbind(c(0.20, 0.20, 0.20), c(0.40, 0.40, 0.40), c(0.40, 0.45, 0.45), 
@@ -31,36 +32,23 @@ for(iscena in 2:sim.nscenarios){
 ## number of simulation trials
 ntrial <- 10000
 
-## family-wise type I error rate (FWER)
-target.alpha <- 10
-
-## size of the inconclusive region size (SIR)
-sir <- 15
-
-## maximum rate of selecting an inadequate dose (MRID)
-mrid <- 25
-
 ## sample size per arm
-nsample <- 24
-## conducting interim analysis after enrolling n1 patients per arm
-n1 <- 12
+nsample <- n_opt
+## conducting interim analysis after enrolling m1 patients per arm
+m1 <- m1_opt
 
 ## hyperparameters
 sigma1 <- 3
 tau <- 1
 
 ## discount factor of an inconclusive decision
-wl <- 0.7
-
-## optimized design parameters
-a12_opt <- 2047
-c12_opt <- 2784
+wl <- 0.6
 
 ## data generation
 todo3_data <- temp <- list()
 for(iscena in 1:sim.nscenarios){
   print(paste('Scenario', iscena))
-  todo3_data[[iscena]] <- todo3_data_generation(rseed=1, iscena, ntrial, n1, nsample, peff.m, theta0, delta1, sigma1, tau)
+  todo3_data[[iscena]] <- todo3_data_generation(rseed=1, iscena, ntrial, m1, nsample, peff.m, theta0, delta1, sigma1, tau)
 }
 
 re <- list()
@@ -78,7 +66,7 @@ for(iscena in 1:sim.nscenarios){
                         fa.mean1 = todo3_data[[iscena]]$fa.mean1, 
                         fa.mean2 = todo3_data[[iscena]]$fa.mean2, 
                         fa.mean3 = todo3_data[[iscena]]$fa.mean3, 
-                        ntrial, peff = peff.m[iscena,], theta0, delta1, ia12 = a12_opt, idr.m = idr.m[iscena,], wl)
+                        ntrial, peff = peff.m[iscena,], theta0, delta1, ia12 = a12_opt, idr.m = idr.m[iscena,], wl, m1, nsample)
   
   main_result <- rbind(main_result, c(re[[iscena]]$present[1:9], 
                                       go1 = 100-re[[iscena]]$futile[2,1],

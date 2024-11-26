@@ -2,7 +2,7 @@
 # futility monitoring and dose comparison for interim and final analysis
 todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
                   ia.mean, fa.mean1, fa.mean2, fa.mean3, 
-                  ntrial, peff, theta0, delta1, ia12, idr.m, wl){
+                  ntrial, peff, theta0, delta1, ia12, idr.m, wl, m1, nsample){
   
   SEL <- matrix(0,ncol=length(peff),nrow=ntrial)
   FUTILE <- array(0,c(2,length(peff),ntrial))
@@ -10,9 +10,12 @@ todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
   fa.mean <- matrix(0,ncol=length(peff),nrow=ntrial)
   
   ## all posible cutoff combinations for futility monitoring
+  gamma1 <- log(seq(1,0.5, by = -0.025))/log(0.5)
+  lambda1 <- seq(0.5,1, by = 0.0025)
   a12 <- NULL
-  for(ia1 in 1:98){ for(ia2 in max(51,ia1):99){a12 <- rbind(a12,c(ia1,ia2)/100)} }
-  a1 <- a12[ia12,1];a2 <- a12[ia12,2]
+  for(ia1 in 1:length(lambda1)){ for(ia2 in 1:length(gamma1)){a12 <- rbind(a12,c(lambda1[ia1],gamma1[ia2]))} }
+  a1 <- a12[ia12,1]*(m1/nsample)^a12[ia12,2]
+  a2 <- a12[ia12,1]
   
   ## all posible cutoff combinations for non-inferior comparison
   c12 <- NULL
@@ -89,23 +92,23 @@ todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
   colnames(futile) <- c('arm1','arm2');rownames(futile) <- c('IA','FA')
   
   none <- mean(colSums(FUTILE[2,,])==2)*100
-  gpower <- 0
+  overallpower <- 0
   for(trial in 1:ntrial){
-    if( sum(FUTILE[2,,trial]==(peff<theta0)) ){gpower <- gpower + 100/ntrial}
+    if( sum(FUTILE[2,,trial]==(peff<theta0)) ){overallpower <- overallpower + 100/ntrial}
   }
   
-  inc <- mean(inconclusive[,1]==-1)*100
-  inc <- t(as.matrix(inc))
-  colnames(inc) <- c('inc.d1')
+  SIR <- mean(inconclusive[,1]==-1)*100
+  SIR <- t(as.matrix(SIR))
+  colnames(SIR) <- c('SIR.d1')
   
-  # present0 <- c(sel*100,sum(inc),pts[,6],none)
-  present0 <- c(sel*100,sum(inc),none,pts[,6])
+  # present0 <- c(sel*100,sum(SIR),pts[,6],none)
+  present0 <- c(sel*100,sum(SIR),none,pts[,6])
   IDR <- sum(present0*idr.m)
-  weighted_loss <- sum(inc)*wl+IDR
+  weighted_loss <- sum(SIR)*wl+IDR
   if(sum(peff<=theta0)==length(peff)){weighted_loss <- IDR}
-  present <- c(sel*100,sum(inc),IDR,weighted_loss,pts[,6],none)
+  present <- c(sel*100,sum(SIR),IDR,weighted_loss,pts[,6],none)
   present <- t(as.matrix(present))
-  colnames(present) <- c('arm1','arm2','inc','IDR','weighted_loss','ASS1','ASS2','none')
+  colnames(present) <- c('arm1','arm2','SIR','IDR','weighted_loss','ASS1','ASS2','none')
   
   parameter <- c(a1,a2,c1,c2)
   parameter <- t(as.matrix(parameter))
@@ -121,5 +124,6 @@ todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
   result.list <- list(peff=peff, pts=round(pts,2), parameter=parameter,
                       futile=round(futile,2), present=present,
                       bias = bias, mse = mse)
+  
   return(result.list)
 }

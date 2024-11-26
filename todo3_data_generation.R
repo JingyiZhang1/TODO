@@ -1,6 +1,6 @@
 
 # data generation for simulation trials
-todo3_data_generation <- function (rseed, iscena, ntrial, n1, nsample, peff.m, theta0, delta1,sigma1,tau){
+todo3_data_generation <- function (rseed, iscena, ntrial, m1, nsample, peff.m, theta0, delta1,sigma1,tau){
   
   set.seed(rseed)
   library(rjags)
@@ -28,20 +28,20 @@ todo3_data_generation <- function (rseed, iscena, ntrial, n1, nsample, peff.m, t
   for (trial in 1:ntrial) {
     
     ## number of responders at the interim analysis per arm
-    data1[1:narm, 1, trial] <- c(sum(rbinom(n1, 1, peff[1])), 
-                                 sum(rbinom(n1, 1, peff[2])), 
-                                 sum(rbinom(n1, 1, peff[3])))
+    data1[1:narm, 1, trial] <- c(sum(rbinom(m1, 1, peff[1])), 
+                                 sum(rbinom(m1, 1, peff[2])), 
+                                 sum(rbinom(m1, 1, peff[3])))
     
     ## number of responders after the interim analysis per arm
-    data1[1:narm, 3, trial] <- c(sum(rbinom(nsample - n1, 1, peff[1])), 
-                                 sum(rbinom(nsample - n1, 1, peff[2])), 
-                                 sum(rbinom(nsample - n1, 1, peff[3]))) 
+    data1[1:narm, 3, trial] <- c(sum(rbinom(nsample - m1, 1, peff[1])), 
+                                 sum(rbinom(nsample - m1, 1, peff[2])), 
+                                 sum(rbinom(nsample - m1, 1, peff[3]))) 
     
     ## total number of responders per arm
     data1[1:narm, 5, trial] <- data1[1:narm, 1, trial] + data1[1:narm, 3, trial]
     
-    data1[1:narm, 2, trial] <- n1             ## number of patients enrolled before interim analysis per arm
-    data1[1:narm, 4, trial] <- nsample - n1   ## number of patients enrolled after interim analysis per arm
+    data1[1:narm, 2, trial] <- m1             ## number of patients enrolled before interim analysis per arm
+    data1[1:narm, 4, trial] <- nsample - m1   ## number of patients enrolled after interim analysis per arm
     data1[1:narm, 6, trial] <- nsample        ## total number of patients per arm
     
     
