@@ -121,7 +121,7 @@ The repository includes two functions:
    (3) the (m1, n, a1, a2, c1, c2) used in this trial (parameter);  
    (4) the selection rate of each dose, the probability of having inconclusive results, the probability of making incorrect decisions, the weighted loss, the average sample size for each dose, the probability of making go decision at the final analysis, and the probability of not having an effective dose at the final analysis (present);
    (5) the average bias across doses (bias);
-   (6) the average mean square error (MSE) across doses (MSE)
+   (6) the average mean square error across doses (MSE)
   ```
 
 # Authors and Reference
