@@ -29,7 +29,7 @@ The repository includes two functions:
   todo2 (ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post, ia.mean, fa.mean1, fa.mean2, fa.mean3, ntrial, peff, theta0, delta1, ia12, idr.m, wl, m1, nsample)
   ```
 
-- TODO2-m1-n-lambda-gamma-optimizaiton.R: The R code for optimizing parameters (m1, n, lambda, gamma).
+- TODO2-m1-n-a1-a2-optimizaiton.R: The R code for optimizing parameters (m1, n, a1, a2).
 
 - TODO2-c1-c2-optimization.R: The R code for optimizing parameters (c1, c2).
 
@@ -53,7 +53,7 @@ The repository includes two functions:
   todo3 (ic12, fdata, ia.post, fa.post1, fa.post2, fa.post3, ia.mean, fa.mean1, fa.mean2, fa.mean3, post1, post2, ntrial, peff, theta0, delta1, ia12, idr.m, wl, m1, nsample)
   ```
 
-- TODO3-m1-n-lambda-gamma-optimizaiton.R: The R code for optimizing parameters (m1, n, lambda, gamma).
+- TODO3-m1-n-a1-a2-optimizaiton.R: The R code for optimizing parameters (m1, n, a1, a2).
 
 - TODO3-c1-c2-optimization.R: The R code for optimizing parameters (c1, c2).
 
@@ -79,7 +79,7 @@ The repository includes two functions:
 
 - `sigma1`,`tau`: The hyperparameters for the proposed model.
 
-- `ia12`: The indicator of the optimal combination of parameters (lambda, gamma).
+- `ia12`: The indicator of the optimal combination of parameters (a1, a2).
 
 - `ic12`: The indicator of the optimal combination of parameters (c1, c2).
 
@@ -109,7 +109,7 @@ The repository includes two functions:
   ```
    (1) the true response rates (peff);  
    (2) the average number of responders and average sample size (pts);  
-   (3) the (m1, n, lambda, gamma, c1, c2) used in this trial (parameter);  
+   (3) the (m1, n, a1, a2, c1, c2) used in this trial (parameter);  
    (4) the overall power: the probability of regarding both doses as futile at the final analysis (overallpower)
   ```
 
@@ -118,7 +118,7 @@ The repository includes two functions:
   ```
    (1) the true response rates (peff);  
    (2) the average number of responders and average sample size (pts);  
-   (3) the (m1, n, lambda, gamma, c1, c2) used in this trial (parameter);  
+   (3) the (m1, n, a1, a2, c1, c2) used in this trial (parameter);  
    (4) the selection rate of each dose, the probability of having inconclusive results, the probability of making incorrect decisions, the weighted loss, the average sample size for each dose, the probability of making go decision at the final analysis, and the probability of not having an effective dose at the final analysis (present);
    (5) the average bias across doses (bias);
    (6) the average mean square error (MSE) across doses (MSE)
