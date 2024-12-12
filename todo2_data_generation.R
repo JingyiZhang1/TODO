@@ -2,77 +2,146 @@
 # data generation for simulation trials
 todo2_data_generation <- function (rseed, iscena, ntrial, m1, nsample, peff.m, theta0, delta1, sigma1, tau) {
   
+  
   set.seed(rseed)
-  library(rjags)
   
-  data1 <- array(0, c(2, 6, ntrial)) # data matrix
-  ia.post1 <- fa.post1 <- fa.post2 <- fa.post3 <- matrix(0, nrow = ntrial, ncol = 2) # posterior probabilities
-  ia.mean1 <- fa.mean1 <- fa.mean2 <- fa.mean3 <- matrix(0, nrow = ntrial, ncol = 2) # posterior mean estimates
-  post1 <- rep(0, ntrial) # posterior probability for between-dose comparison
-  peff <- peff.m[iscena, ] # scenario
+  NN <- 1000000 # no need to re-generate for each different (y1, y2) combination
+  mu1 <- rnorm(NN,qnorm(theta0,0,1),sigma1)
+  sigma <- abs(rcauchy(NN, location = 0, scale = tau))
+  mu2 <- rnorm(NN,mu1,sigma)
+  p1 <- pnorm(mu1)
+  p2 <- pnorm(mu2)
   
-  ## dynamic linear model
-  modelstring.ndlm <- " model {
-      for(i in 1:narm){
-          y[i] ~ dbin(pe[i],n[i])
-          probit(pe[i]) <- mu[i]
-      }
-      mu[1] ~ dnorm(theta,1/sigma1)
-      for(i in 2:narm){
-          mu[i] ~ dnorm(mu[i-1],1/inv.sig[i-1]/inv.sig[i-1])
-          inv.sig[i-1] ~ dt(0,1/tau/tau,1)T(0,)
-      }
-    }"
+  post1f <- function (yy, nn, p1, p2, theta0) {
+    
+    ll <- yy[1]*log(p1) + (nn[1]-yy[1])*log(1-p1) + 
+      yy[2]*log(p2) + (nn[2]-yy[2])*log(1-p2)
+    
+    if(yy[1]==0 & yy[2]==0){
+      ll <- (nn[1]-yy[1])*log(1-p1) + 
+        (nn[2]-yy[2])*log(1-p2) } 
+    
+    if(yy[1]==0 & yy[2]>0 & yy[2]<nn[2]){
+      ll <- (nn[1]-yy[1])*log(1-p1) + 
+        yy[2]*log(p2) + (nn[2]-yy[2])*log(1-p2) } 
+    
+    if (yy[1]==0 & yy[2]==nn[2]){
+      ll <- (nn[1]-yy[1])*log(1-p1) + 
+        yy[2]*log(p2) }
+    
+    if (yy[1]>0 & yy[1]<nn[1] & yy[2]==0){
+      ll <- yy[1]*log(p1) + (nn[1]-yy[1])*log(1-p1) + 
+        (nn[2]-yy[2])*log(1-p2) } 
+    
+    if (yy[1]>0 & yy[1]<nn[1] & yy[2]==nn[2]){
+      ll <- yy[1]*log(p1) + (nn[1]-yy[1])*log(1-p1) + 
+        yy[2]*log(p2) }
+    
+    if (yy[1]==nn[1] & yy[2]==0){
+      ll <- yy[1]*log(p1) + 
+        (nn[2]-yy[2])*log(1-p2) }
+    
+    if (yy[1]==nn[1] & yy[2]>0 & yy[2]<nn[2]){
+      ll <- yy[1]*log(p1) + 
+        yy[2]*log(p2) + (nn[2]-yy[2])*log(1-p2) }
+    
+    if (yy[1]==nn[1]  & yy[2]==nn[2]){
+      ll <- yy[1]*log(p1) + 
+        yy[2]*log(p2) } 
+    
+    expll <- exp(ll)
+    # ia.post1 <- c(mean(l*(p1>0.2))/mean(l), mean(l*(p2>0.2))/mean(l))
+    ia.post1 <- c(mean(expll*(p1>theta0))/mean(expll), mean(expll*(p2>theta0))/mean(expll))
+    ia.mean1 <- c(mean(expll*(p1))/mean(expll), mean(expll*(p2))/mean(expll))
+    
+    re.list <- c(post_d1 = ia.post1[1], post_d2 = ia.post1[2], mean_d1 = ia.mean1[1], mean_d2 = ia.mean1[2] )
+    return(re.list)
+  }
   
-  ## simulations for data generation and model fitting
+  post2f <- function (yy, nn, p1, p2, delta1, theta0) {
+    
+    ll <- yy[1]*log(p1) + (nn[1]-yy[1])*log(1-p1) + 
+      yy[2]*log(p2) + (nn[2]-yy[2])*log(1-p2)
+    
+    if(yy[1]==0 & yy[2]==0){
+      ll <- (nn[1]-yy[1])*log(1-p1) + 
+        (nn[2]-yy[2])*log(1-p2) } 
+    
+    if(yy[1]==0 & yy[2]>0 & yy[2]<nn[2]){
+      ll <- (nn[1]-yy[1])*log(1-p1) + 
+        yy[2]*log(p2) + (nn[2]-yy[2])*log(1-p2) } 
+    
+    if (yy[1]==0 & yy[2]==nn[2]){
+      ll <- (nn[1]-yy[1])*log(1-p1) + 
+        yy[2]*log(p2) }
+    
+    if (yy[1]>0 & yy[1]<nn[1] & yy[2]==0){
+      ll <- yy[1]*log(p1) + (nn[1]-yy[1])*log(1-p1) + 
+        (nn[2]-yy[2])*log(1-p2) } 
+    
+    if (yy[1]>0 & yy[1]<nn[1] & yy[2]==nn[2]){
+      ll <- yy[1]*log(p1) + (nn[1]-yy[1])*log(1-p1) + 
+        yy[2]*log(p2) }
+    
+    if (yy[1]==nn[1] & yy[2]==0){
+      ll <- yy[1]*log(p1) + 
+        (nn[2]-yy[2])*log(1-p2) }
+    
+    if (yy[1]==nn[1] & yy[2]>0 & yy[2]<nn[2]){
+      ll <- yy[1]*log(p1) + 
+        yy[2]*log(p2) + (nn[2]-yy[2])*log(1-p2) }
+    
+    if (yy[1]==nn[1]  & yy[2]==nn[2]){
+      ll <- yy[1]*log(p1) + 
+        yy[2]*log(p2) } 
+    
+    expll <- exp(ll)
+    # ia.post1 <- c(mean(l*(p1>0.2))/mean(l), mean(l*(p2>0.2))/mean(l))
+    ia.post1 <- c(mean(expll*(p1>theta0))/mean(expll), mean(expll*(p2>theta0))/mean(expll))
+    ia.mean1 <- c(mean(expll*(p1))/mean(expll), mean(expll*(p2))/mean(expll))
+    
+    post1 <- mean(expll*((p2-p1)<delta1))/mean(expll)
+    
+    re.list <- c(post_d1 = ia.post1[1], post_d2 = ia.post1[2], mean_d1 = ia.mean1[1], mean_d2 = ia.mean1[2], post1 = post1 )
+    return(re.list)
+  }
+  
+  data1 <- array(0, c(2, 6, ntrial))
+  ia.post1 <- fa.post1 <- fa.post2 <- fa.post3 <- matrix(0, nrow = ntrial, ncol = 2)
+  ia.mean1 <- fa.mean1 <- fa.mean2 <- fa.mean3 <- matrix(0, nrow = ntrial, ncol = 2)
+  post1 <- rep(0, ntrial)
+  peff <- peff.m[iscena, ]
+  
+  
   for (trial in 1:ntrial) {
+    data1[1:2, 1, trial] <- c(sum(rbinom(m1, 1, peff[1])), sum(rbinom(m1, 1, peff[2])))
+    data1[1:2, 3, trial] <- c(sum(rbinom(nsample - m1, 1, peff[1])), sum(rbinom(nsample - m1, 1, peff[2])))
+    data1[1:2, 5, trial] <- data1[1:2, 1, trial] + data1[1:2, 3, trial]
+    data1[1:2, 2, trial] <- m1
+    data1[1:2, 4, trial] <- nsample - m1
+    data1[1:2, 6, trial] <- nsample
     
-    ## data generation
-    data1[1:2, 1, trial] <- c(sum(rbinom(m1, 1, peff[1])), sum(rbinom(m1, 1, peff[2])))                      ## number of responders at the interim analysis per arm
-    data1[1:2, 3, trial] <- c(sum(rbinom(nsample - m1, 1, peff[1])), sum(rbinom(nsample - m1, 1, peff[2])))  ## number of responders after the interim analysis per arm
-    data1[1:2, 5, trial] <- data1[1:2, 1, trial] + data1[1:2, 3, trial]                                      ## total number of responders per arm
-    data1[1:2, 2, trial] <- m1             ## number of patients enrolled before interim analysis per arm
-    data1[1:2, 4, trial] <- nsample - m1   ## number of patients enrolled after interim analysis per arm
-    data1[1:2, 6, trial] <- nsample        ## total number of patients per arm
+    temp_post1f <- post1f(yy = data1[,1,trial], nn = data1[,2,trial], p1, p2, theta0)
+    ia.post1[trial, ] <- temp_post1f[1:2]
+    ia.mean1[trial, ] <- temp_post1f[3:4]
     
-    ## model fitting: interim analysis
-    ia.data <- list(y = data1[, 1, trial], n = data1[, 2, trial], narm = dim(data1)[1], theta = qnorm(theta0), sigma1 = sigma1, tau = tau)
-    ia <- jags.model(textConnection(modelstring.ndlm), data = ia.data, n.chains = 1, n.adapt = 5000, quiet = TRUE)
-    ia.sample <- coda.samples(ia, c("pe"), n.iter = 10000, progress.bar = "none", thin = 5)
-    ia1 <- as.matrix(ia.sample)
-    ia.post1[trial, ] <- colMeans(ia1 > theta0) ## posterior probability of larger than the null response rate
-    ia.mean1[trial, ] <- colMeans(ia1)          ## posterior mean response rate
+    temp_post2f <- post2f(yy = data1[,5,trial], nn = data1[,6,trial], p1, p2, delta1, theta0)
+    fa.post1[trial, ] <- temp_post2f[1:2]
+    fa.mean1[trial, ] <- temp_post2f[3:4]
+    post1[trial] <- temp_post2f[5]
     
-    ## model fitting: final analysis, if both arms pass the interim futility monitoring
-    fa.data <- list(y = data1[, 5, trial], n = data1[, 6, trial], narm = dim(data1)[1], theta = qnorm(theta0), sigma1 = sigma1, tau = tau)
-    fa <- jags.model(textConnection(modelstring.ndlm), data = fa.data, n.chains = 1, n.adapt = 5000, quiet = TRUE)
-    fa.sample <- coda.samples(fa, c("pe"), n.iter = 10000, progress.bar = "none", thin = 5)
-    fa1 <- as.matrix(fa.sample)
-    fa.post1[trial, ] <- colMeans(fa1 > theta0) ## posterior probability of larger than the null response rate
-    fa.mean1[trial, ] <- colMeans(fa1)          ## posterior mean response rate
-    post1[trial] <- mean(fa1[, 2] - fa1[, 1] < delta1) ## posterior probability that dose 1 is non-inferior to dose 2
+    # dose 1: futile; dose 2: go
+    temp_post1f <- post1f(yy = c(data1[1, 1, trial], data1[2, 5, trial]), nn = c(data1[1, 2, trial], data1[2, 6, trial]), p1, p2, theta0)
+    fa.post2[trial, ] <- temp_post1f[1:2]
+    fa.mean2[trial, ] <- temp_post1f[3:4]
     
-    ## model fitting: final analysis, if only dose 2 passes the interim futility monitoring
-    fa.data2 <- list(y = c(data1[1, 1, trial], data1[2, 5, trial]), n = c(data1[1, 2, trial], data1[2, 6, trial]), narm = dim(data1)[1], 
-                     theta = qnorm(theta0), sigma1 = sigma1, tau = tau)
-    fa2 <- jags.model(textConnection(modelstring.ndlm), data = fa.data2, n.chains = 1, n.adapt = 5000, quiet = TRUE)
-    fa.sample2 <- coda.samples(fa2, c("pe"), n.iter = 10000, progress.bar = "none", thin = 5)
-    fa2 <- as.matrix(fa.sample2)
-    fa.post2[trial, ] <- colMeans(fa2 > theta0) ## posterior probability of larger than the null response rate
-    fa.mean2[trial, ] <- colMeans(fa2)          ## posterior mean response rate
-    
-    
-    ## model fitting: final analysis, if only dose 1 passes the interim futility monitoring
-    fa.data3 <- list(y = c(data1[1, 5, trial], data1[2, 1, trial]), n = c(data1[1, 6, trial], data1[2, 2, trial]), narm = dim(data1)[1], 
-                     theta = qnorm(theta0), sigma1 = sigma1, tau = tau)
-    fa3 <- jags.model(textConnection(modelstring.ndlm), data = fa.data3, n.chains = 1, n.adapt = 5000, quiet = TRUE)
-    fa.sample3 <- coda.samples(fa3, c("pe"), n.iter = 10000, progress.bar = "none", thin = 5)
-    fa3 <- as.matrix(fa.sample3)
-    fa.post3[trial, ] <- colMeans(fa3 > theta0) ## posterior probability of larger than the null response rate
-    fa.mean3[trial, ] <- colMeans(fa3)          ## posterior mean response rate
+    # dose 1: go; dose 2: futile
+    temp_post1f <- post1f(yy = c(data1[1, 5, trial], data1[2, 1, trial]), nn = c(data1[1, 6, trial], data1[2, 2, trial]), p1, p2, theta0)
+    fa.post3[trial, ] <- temp_post1f[1:2]
+    fa.mean3[trial, ] <- temp_post1f[3:4]
   }
   re.list <- list(data = data1, 
-                  ia.post = ia.post1, fa.post1 = fa.post1, fa.post2 = fa.post2, fa.post3=fa.post3, post = post1,
+                  ia.post = ia.post1, fa.post1 = fa.post1, fa.post2 = fa.post2, fa.post3=fa.post3, post = post1, 
                   ia.mean = ia.mean1, fa.mean1 = fa.mean1, fa.mean2 = fa.mean2, fa.mean3=fa.mean3)
   return(re.list)
 }

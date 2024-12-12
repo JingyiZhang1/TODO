@@ -1,5 +1,5 @@
 # using the functions: todo2_data_generation(), todo2()
-load('E:/projects/20221213-project-TODO/review/20241119/code/TODO2-c1-c2-optimization.RData')
+load('E:/projects/20221213-project-TODO/review/20241205/code-github/TODO2-c1-c2-optimization.RData')
 
 ## simulation scenarios
 peff.m <- rbind(c(0.20,0.20), c(0.40,0.40), c(0.40,0.45),

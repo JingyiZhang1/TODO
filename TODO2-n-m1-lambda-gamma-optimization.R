@@ -1,5 +1,5 @@
-source('E:/projects/20221213-project-TODO/review/20241119/code/todo2_data_generation.R')
-source('E:/projects/20221213-project-TODO/review/20241119/code/todo2_futility.R')
+source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo2_data_generation.R')
+source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo2_futility.R')
 
 ## simulation scenarios
 peff.m <- rbind(c(0.20,0.20), c(0.40,0.40))
@@ -38,7 +38,7 @@ tau <- 1
 wl <- 0.4
 
 
-for(nsample in 27:28){ ## nsample: sample size per arm
+for(nsample in 28:29){ ## nsample: sample size per arm
   
   m1_c <- round((nsample/3):(nsample*2/3))
   ass_m1 <- cbind(m1_c, rep(0, length(m1_c)))
@@ -136,7 +136,7 @@ a1_opt <- lambda_opt *(m1_opt/n_opt)^gamma_opt
 a2_opt <- lambda_opt
 
 print(paste('optimal (m1, n, gamma, lambda) = (', 
-            m1_opt, ', ', n_opt, ', ', gamma_opt, ', ', lambda_opt,')', sep =''))
+            m1_opt, ', ', n_opt, ', ', round(gamma_opt, 4), ', ', lambda_opt,')', sep =''))
 
 
 save.image("TODO2-n-m1-lambda-gamma-optimization.RData")

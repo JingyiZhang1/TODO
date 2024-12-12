@@ -1,6 +1,6 @@
 # using the functions: todo2_data_generation(), todo2_futility(), todo2()
-load('E:/projects/20221213-project-TODO/review/20241119/code/TODO2-n-m1-lambda-gamma-optimization.RData')
-source('E:/projects/20221213-project-TODO/review/20241119/code/todo2.R')
+load('E:/projects/20221213-project-TODO/review/20241205/code-github/TODO2-n-m1-lambda-gamma-optimization.RData')
+source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo2.R')
 
 ## simulation scenarios
 peff.m <- rbind(c(0.20,0.20), c(0.40,0.40), 
@@ -70,8 +70,8 @@ for(iscena in 3:4){
                             theta0, delta1, ia12=a12_opt, idr.m = idr.m[iscena,], wl, m1, nsample)
   }
   todo2_c[[iscena]] <- list()
-  todo2_c[[iscena]]$parameter <- matrix(0, nrow = ntrialc, ncol = 4)
-  todo2_c[[iscena]]$present <- matrix(0, nrow = ntrialc, ncol = 8)
+  todo2_c[[iscena]]$parameter <- matrix(0, nrow = ntrialc, ncol = 6)
+  todo2_c[[iscena]]$present <- matrix(0, nrow = ntrialc, ncol = 10)
   
   for(iic in 1:ntrialc){
     todo2_c[[iscena]]$parameter[iic,] <- tempc[[iic]]$parameter
@@ -81,8 +81,8 @@ for(iscena in 3:4){
 
 
 c_matrix <- cbind(ic = 1:ntrialc,
-                  c1 = todo2_c[[3]]$parameter[,3], 
-                  c2 = todo2_c[[3]]$parameter[,4], 
+                  c1 = todo2_c[[3]]$parameter[,5], 
+                  c2 = todo2_c[[3]]$parameter[,6], 
                   inconclusive_scenario3 = todo2_c[[3]]$present[,3], 
                   inconclusive_scenario4 = todo2_c[[4]]$present[,3], 
                   weighted_loss_scenario3 = todo2_c[[3]]$present[,5], 
@@ -97,7 +97,7 @@ for(ic1 in 1:98){
 c1_opt <- c12[c12_opt,1];c2_opt <- c12[c12_opt,2]
 
 print(paste('optimal (m1, n, gamma, lambda, c1, c2) = (', 
-            m1_opt, ', ', n_opt, ', ', gamma_opt, ', ', lambda_opt, ', ', c1_opt, ', ', c2_opt,')', sep =''))
+            m1_opt, ', ', n_opt, ', ', round(gamma_opt,4), ', ', lambda_opt, ', ', c1_opt, ', ', c2_opt,')', sep =''))
 
 save.image("TODO2-c1-c2-optimization.RData")
 

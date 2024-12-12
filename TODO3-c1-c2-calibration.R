@@ -1,6 +1,6 @@
 # using the functions: todo3_data_generation(), todo3_futility(), todo3()
-load('E:/projects/20221213-project-TODO/review/20241119/code/TODO3-n-m1-lambda-gamma-optimization.RData')
-source('E:/projects/20221213-project-TODO/review/20241119/code/todo3.R')
+load('E:/projects/20221213-project-TODO/review/20241205/code-github/TODO3-n-m1-lambda-gamma-optimization.RData')
+source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo3.R')
 
 ## simulation scenarios
 peff.m <- rbind(c(0.20, 0.20, 0.20), c(0.40, 0.40, 0.40), c(0.40, 0.45, 0.45), 
@@ -90,8 +90,8 @@ for(iscena in 3:6){
                           theta0, delta1, ia12=a12_opt, idr.m = idr.m[iscena,], wl, m1, nsample)
   }
   todo3_c[[iscena]] <- list()
-  todo3_c[[iscena]]$parameter <- matrix(0, nrow = ntrialc, ncol = 4)
-  todo3_c[[iscena]]$present <- matrix(0, nrow = ntrialc, ncol = 10)
+  todo3_c[[iscena]]$parameter <- matrix(0, nrow = ntrialc, ncol = 6)
+  todo3_c[[iscena]]$present <- matrix(0, nrow = ntrialc, ncol = 13)
   
   for(iic in 1:ntrialc){
     todo3_c[[iscena]]$parameter[iic,] <- tempc[[iic]]$parameter
@@ -122,8 +122,10 @@ for(ic1 in 1:98){
   for(ic2 in ic1:min(ic1+60,99)){c12 <- rbind(c12,c(ic1,ic2)/100)} }
 c1_opt <- c12[c12_opt,1];c2_opt <- c12[c12_opt,2]
 
+# print(paste('optimal (m1, n, gamma, lambda, c1, c2) = (', 
+#             m1, ', ', nsample, ', ', a12[a12_opt,2], ', ', a12[a12_opt,1], ', ', c1_opt, ', ', c2_opt,')', sep =''))
 print(paste('optimal (m1, n, gamma, lambda, c1, c2) = (', 
-            m1, ', ', nsample, ', ', a12[a12_opt,2], ', ', a12[a12_opt,1], ', ', c1_opt, ', ', c2_opt,')', sep =''))
+            m1_opt, ', ', n_opt, ', ', round(gamma_opt,4), ', ', lambda_opt, ', ', c1_opt, ', ', c2_opt,')', sep =''))
 
 
 save.image("TODO3-c1-c2-optimization.RData")

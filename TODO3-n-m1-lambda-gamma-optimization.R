@@ -1,5 +1,5 @@
-source('E:/projects/20221213-project-TODO/review/20241119/code/todo3_data_generation.R')
-source('E:/projects/20221213-project-TODO/review/20241119/code/todo3_futility.R')
+source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo3_data_generation.R')
+source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo3_futility.R')
 
 ## simulation scenarios
 peff.m <- rbind(c(0.20, 0.20, 0.20), c(0.40, 0.40, 0.40) )
@@ -24,12 +24,6 @@ target.alpha <- 10
 ## target overall power
 target.op <- 95
 
-## size of the inconclusive region size (SIR)
-sir <- 15
-
-## maximum rate of selecting an inadequate dose (MRID)
-mrid <- 25
-
 ## hyperparameters
 sigma1 <- 3
 tau <- 1
@@ -37,7 +31,7 @@ tau <- 1
 ## discount factor of an inconclusive decision
 wl <- 0.6
 
-for(nsample in 21:22){ ## nsample: sample size per arm
+for(nsample in 50:51){ ## nsample: sample size per arm
   
   m1_c <- round((nsample/3):(nsample*2/3))
   ass_m1 <- cbind(m1_c, rep(0, length(m1_c)))
@@ -131,6 +125,6 @@ a1_opt <- lambda_opt *(m1_opt/n_opt)^gamma_opt
 a2_opt <- lambda_opt
 
 print(paste('optimal (m1, n, gamma, lambda, a1, a2) = (', 
-            m1_opt, ', ', n_opt, ', ', gamma_opt, ', ', lambda_opt, ')', sep =''))
+            m1_opt, ', ', n_opt, ', ', round(gamma_opt,4), ', ', lambda_opt, ')', sep =''))
 
 save.image("TODO3-n-m1-lambda-gamma-optimization.RData")
