@@ -112,7 +112,7 @@ todo2 <- function(ic12, fdata, ia.post,fa.post1, fa.post2, fa.post3,  post,
   
   parameter <- c(m1, nsample, a12[ia12,1], a12[ia12,2], c1, c2)
   parameter <- t(as.matrix(parameter))
-  colnames(parameter) <- c('m1', 'n', 'lambda', 'gamma', 'c1', 'c2')
+  colnames(parameter) <- c('m1', 'n', 'a1', 'a2', 'c1', 'c2')
   
   ## bias and MSE
   bias <- mse <- rep(0, length(peff))

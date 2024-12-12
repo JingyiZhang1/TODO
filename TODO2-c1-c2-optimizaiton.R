@@ -1,5 +1,5 @@
 # using the functions: todo2_data_generation(), todo2_futility(), todo2()
-load('E:/projects/20221213-project-TODO/review/20241205/code-github/TODO2-n-m1-lambda-gamma-optimization.RData')
+load('E:/projects/20221213-project-TODO/review/20241205/code-github/TODO2-n-m1-a1-a2-optimization.RData')
 source('E:/projects/20221213-project-TODO/review/20241205/code-github/todo2.R')
 
 ## simulation scenarios
@@ -96,8 +96,8 @@ for(ic1 in 1:98){
   for(ic2 in ic1:min(ic1+60,99)){c12 <- rbind(c12,c(ic1,ic2)/100)} }
 c1_opt <- c12[c12_opt,1];c2_opt <- c12[c12_opt,2]
 
-print(paste('optimal (m1, n, gamma, lambda, c1, c2) = (', 
-            m1_opt, ', ', n_opt, ', ', round(gamma_opt,4), ', ', lambda_opt, ', ', c1_opt, ', ', c2_opt,')', sep =''))
+print(paste('optimal (m1, n, a1, a2, c1, c2) = (', 
+            m1_opt, ', ', n_opt, ', ', round(a1_opt,4), ', ', a2_opt, ', ', c1_opt, ', ', c2_opt,')', sep =''))
 
 save.image("TODO2-c1-c2-optimization.RData")
 
